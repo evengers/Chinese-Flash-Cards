@@ -1,6 +1,7 @@
 from tkinter import *
 from random import choice
 import pandas as pd
+import pinyin
 #import re
 
 BACKGROUND_COLOR = "#B1DDC6"
@@ -31,30 +32,47 @@ correct_words = []
 incorrect_words = []
 side = 'front'
 current_card = None
+current_pinyin = None
+show_pinyin = False
+
+
+def hide_widget(widget):
+    canvas.itemconfig(1, state='hidden')
+
+
+def show_widget(widget):
+    canvas.itemconfig(1, state='normal')
 
 
 def next_card():
     global current_card
     global side
+    global current_pinyin
     if side == 'back':
         flip_card()
     current_card = choice(to_learn)
     canvas.itemconfig(card_title, text="Chinese")
     canvas.itemconfig(card_word, text=current_card["Chinese"])
+    current_pinyin = pinyin.get(current_card["Chinese"], delimiter=" ")
+    canvas.itemconfig(card_pinyin, text=current_pinyin, fill="#000000")
 
 
 def flip_card():
     global side
+    global current_pinyin
+    global show_pinyin
     if side == 'front':
         side = 'back'
         canvas.itemconfig(card_image, image=card_back_img)
         canvas.itemconfig(card_title, text="English", fill="#FFFFFF")
         canvas.itemconfig(card_word, text=current_card["English"], fill="#FFFFFF")
+        canvas.itemconfig(card_pinyin, text="", fill="#000000")
     else:
         side = 'front'
         canvas.itemconfig(card_image, image=card_front_img)
         canvas.itemconfig(card_title, text="Chinese", fill="#000000")
         canvas.itemconfig(card_word, text=current_card["Chinese"], fill="#000000")
+        canvas.itemconfig(card_pinyin, text=current_pinyin, fill="#000000")
 
 
 def on_click(event):
@@ -90,6 +108,10 @@ card_front_img = PhotoImage(file="images/card_front.png")
 card_image = canvas.create_image(400, 263, image=card_front_img)
 card_title = canvas.create_text(400, 150, fill="#000000", font=("Ariel", 40, "italic"))
 card_word = canvas.create_text(400, 263, fill="#000000", font=("Ariel", 60, "bold"))
+card_pinyin = canvas.create_text(400, 363, fill="#000000", font=("Ariel", 60, "bold"))
+# canvas.itemconfig(card_pinyin, state='hidden')
+# card_show_pinyin = Button(highlightbackground="#FFFFFF", bg="#FFFFFF", text="Show Pinyin",
+#                           command=lambda:show_widget(card_pinyin))#, height=3, width=10)
 canvas.bind("<Button-1>", on_click)
 
 # Buttons
@@ -99,9 +121,10 @@ wrong_button = Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR,
 correct_button = Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR, image=correct_img, command=correct)
 
 # Grid Layout
-canvas.grid(column=0, row=0, columnspan=2)#, rowspan=2)
-wrong_button.grid(column=0, row=1)
-correct_button.grid(column=1, row=1)
+canvas.grid(column=0, row=0, columnspan=15, rowspan=10)
+wrong_button.grid(column=5, row=10)
+correct_button.grid(column=9, row=10)
+# card_show_pinyin.grid(column=7, row=7)
 
 # Set up flashcards
 next_card()
