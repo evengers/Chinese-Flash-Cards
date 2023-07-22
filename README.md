@@ -12,6 +12,7 @@ Features:
 Chinese words taken from: https://github.com/hermitdave/FrequencyWords/tree/master/content/2018/zh_cn
 
 TODO:
+- Hookup ChatGPT to generate Chinese sentences
 - Add pinyin for Chinese characters -> https://pypi.org/project/pinyin/
 - google translate -> https://pypi.org/project/googletrans/
 - google translate narrator -> https://pypi.org/project/google-speech/
