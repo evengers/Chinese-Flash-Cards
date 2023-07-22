@@ -12,12 +12,15 @@ Features:
 Chinese words taken from: https://github.com/hermitdave/FrequencyWords/tree/master/content/2018/zh_cn
 
 TODO:
-- Add pinyin for Chinese characters
+- Add pinyin for Chinese characters -> https://pypi.org/project/pinyin/
+- google translate -> https://pypi.org/project/googletrans/
+- google translate narrator -> https://pypi.org/project/google-speech/
 - hook up Google translate to do automatic translations (for each character and sentence) -> https://codelabs.developers.google.com/codelabs/cloud-translation-python3#0
 - Create another flash card stack by web scraping https://studychinese101.com/1000-chinese-sentences-in-daily-life.html
 - Look into implementing list from HSK -> https://en.wiktionary.org/wiki/Appendix:HSK_list_of_Mandarin_words
 
 How to run:
+- Python 3.11 is recommended
 - Download repository
 - Open downloaded repository with a command line interface
 - run `pip install pandas`
