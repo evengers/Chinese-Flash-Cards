@@ -20,7 +20,7 @@ TODO:
 - Look into implementing list from HSK -> https://en.wiktionary.org/wiki/Appendix:HSK_list_of_Mandarin_words
 
 How to run:
-- Python 3.11 is recommended
+- Python 3.11.4 is highly recommended to resolve tkinter issues
 - Download repository
 - Open downloaded repository with a command line interface
 - run `pip install pandas`
