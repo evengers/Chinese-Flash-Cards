@@ -25,7 +25,7 @@ How to run:
 - Python 3.11.4 is highly recommended to resolve tkinter issues
 - Download repository
 - Open downloaded repository with a command line interface
-- run `pip install pandas`
+- run `pip install pandas pinyin`
 - run `python main.py`
 - App window will open
 - Click the card to see the translation, and once again to see original card
