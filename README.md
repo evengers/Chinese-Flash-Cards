@@ -13,12 +13,14 @@ Chinese words taken from: https://github.com/hermitdave/FrequencyWords/tree/mast
 
 TODO:
 - Hookup ChatGPT to generate Chinese sentences
-- Add pinyin for Chinese characters -> https://pypi.org/project/pinyin/
 - google translate -> https://pypi.org/project/googletrans/
 - google translate narrator -> https://pypi.org/project/google-speech/
 - hook up Google translate to do automatic translations (for each character and sentence) -> https://codelabs.developers.google.com/codelabs/cloud-translation-python3#0
 - Create another flash card stack by web scraping https://studychinese101.com/1000-chinese-sentences-in-daily-life.html
 - Look into implementing list from HSK -> https://en.wiktionary.org/wiki/Appendix:HSK_list_of_Mandarin_words
+
+External Packages Used:
+- Chinese Pinyin: https://pypi.org/project/pinyin/
 
 How to run:
 - Python 3.11.4 is highly recommended to resolve tkinter issues
