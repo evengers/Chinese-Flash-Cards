@@ -12,7 +12,6 @@ Features:
 Chinese words taken from: https://github.com/hermitdave/FrequencyWords/tree/master/content/2018/zh_cn
 
 TODO:
-- Fix pinyin button logic to display pinyin
 - Hookup ChatGPT to generate Chinese sentences
 - Add pinyin for Chinese characters -> https://pypi.org/project/pinyin/
 - google translate -> https://pypi.org/project/googletrans/
@@ -34,9 +33,13 @@ How to run:
 - Progress is saved automatically
 - View data/ directory for more info
 
-Card Front:
+Card Front without pinyin:
 
-![alt text](https://github.com/J0K3Rn/Chinese-Flash-Cards/blob/main/screenshots/card_front.png?raw=true) 
+![alt text](https://github.com/J0K3Rn/Chinese-Flash-Cards/blob/main/screenshots/card_front_no_pinyin.png?raw=true) 
+
+Card Front with pinyin:
+
+![alt text](https://github.com/J0K3Rn/Chinese-Flash-Cards/blob/main/screenshots/card_front_with_pinyin.png?raw=true) 
 
 Card Back:
 

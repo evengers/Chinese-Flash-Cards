@@ -1,4 +1,4 @@
-from tkinter import *
+import tkinter as tk
 from random import choice
 import pandas as pd
 import pinyin
@@ -36,97 +36,110 @@ current_pinyin = None
 show_pinyin = False
 
 
-def hide_widget(widget):
-    canvas.itemconfig(1, state='hidden')
+class App(object):
+    def __init__(self):
+        window.title("Flashy")
+        window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
+
+        self.canvas = tk.Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
+        # image_img = PhotoImage(file="images/images.png")
+        self.card_back_img = tk.PhotoImage(file="images/card_back.png")
+        self.card_front_img = tk.PhotoImage(file="images/card_front.png")
+        self.card_image = self.canvas.create_image(400, 263, image=self.card_front_img)
+        self.card_title = self.canvas.create_text(400, 150, fill="#000000", font=("Ariel", 40, "italic"))
+        self.card_word = self.canvas.create_text(400, 263, fill="#000000", font=("Ariel", 60, "bold"))
+        self.card_pinyin_label = self.canvas.create_text(400, 363, fill="#000000", font=("Ariel", 60, "bold"))
+        self.canvas.itemconfig(self.card_pinyin_label, state='hidden')
+        self.show_pinyin_button = tk.Button(window, highlightbackground="#FFFFFF", bg="#FFFFFF", text="Show Pinyin", command=self.show_pinyin)  # , height=3, width=10)
+        self.canvas.bind("<Button-1>", self.on_click)
+
+        # Buttons
+        self.correct_img = tk.PhotoImage(file="images/right.png")
+        self.incorrect_img = tk.PhotoImage(file="images/wrong.png")
+        self.wrong_button = tk.Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR, image=self.incorrect_img, command=self.incorrect)
+        self.correct_button = tk.Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR, image=self.correct_img, command=self.correct)
+
+        # Grid Layout
+        self.canvas.grid(column=0, row=0, columnspan=15, rowspan=10)
+        self.wrong_button.grid(column=5, row=10)
+        self.correct_button.grid(column=9, row=10)
+        self.show_pinyin_button.grid(column=7, row=7)
+
+        # Set up flashcards
+        self.next_card()
+
+    def show_pinyin(self):
+        global show_pinyin
+        show_pinyin = True
+        self.show_pinyin_button.lower()  # Lowers button below canvas. i.e. out of view. Much easier than destroying
+        # self.show_pinyin_button.destroy()
+        self.canvas.itemconfig(self.card_pinyin_label, state='normal')
+
+    def flip_card(self):
+        global side
+        global current_card
+        global current_pinyin
+        global show_pinyin
+        if side == 'front':
+            side = 'back'
+            self.canvas.itemconfig(self.card_image, image=self.card_back_img)
+            self.canvas.itemconfig(self.card_title, text="English", fill="#FFFFFF")
+            self.canvas.itemconfig(self.card_word, text=current_card["English"], fill="#FFFFFF")
+            self.canvas.itemconfig(self.card_pinyin_label, text="", fill="#000000")
+            if not show_pinyin:
+                # If pinyin is not shown, hide button on back
+                self.show_pinyin_button.lower()
+        else:
+            side = 'front'
+            self.canvas.itemconfig(self.card_image, image=self.card_front_img)
+            self.canvas.itemconfig(self.card_title, text="Chinese", fill="#000000")
+            self.canvas.itemconfig(self.card_word, text=current_card["Chinese"], fill="#000000")
+            self.canvas.itemconfig(self.card_pinyin_label, text=current_pinyin, fill="#000000")
+            if not show_pinyin:
+                # If pinyin is shown, show again on front
+                self.show_pinyin_button.lift()
+
+    def next_card(self):
+        global current_card
+        global side
+        global current_pinyin
+        global show_pinyin
+        if side == 'back':
+            self.flip_card()
+        current_card = choice(to_learn)
+        self.canvas.itemconfig(self.card_title, text="Chinese")
+        self.canvas.itemconfig(self.card_word, text=current_card["Chinese"])
+        current_pinyin = pinyin.get(current_card["Chinese"], delimiter=" ")
+        self.canvas.itemconfig(self.card_pinyin_label, text=current_pinyin, fill="#000000")
+
+        # Reset Pinyin button states for next card
+        self.canvas.itemconfig(self.card_pinyin_label, state='hidden')
+        self.show_pinyin_button.lift()
+        show_pinyin = False
+
+    def correct(self):
+        global current_card
+        correct_words.append(current_card)
+        to_learn.remove(current_card)
+        correct_df = pd.DataFrame(correct_words)
+        correct_df.to_csv("data/correct_words.csv", index=False)
+        self.next_card()
+
+    def incorrect(self):
+        global current_card
+        incorrect_words.append(current_card)
+        to_learn.remove(current_card)
+        incorrect_df = pd.DataFrame(incorrect_words)
+        incorrect_df.to_csv("data/incorrect_words.csv", index=False)
+        words_to_learn_df = pd.DataFrame(to_learn)
+        words_to_learn_df.to_csv("data/words_to_learn.csv", index=False)
+        self.next_card()
+
+    def on_click(self, event):
+        self.flip_card()
 
 
-def show_widget(widget):
-    canvas.itemconfig(1, state='normal')
-
-
-def next_card():
-    global current_card
-    global side
-    global current_pinyin
-    if side == 'back':
-        flip_card()
-    current_card = choice(to_learn)
-    canvas.itemconfig(card_title, text="Chinese")
-    canvas.itemconfig(card_word, text=current_card["Chinese"])
-    current_pinyin = pinyin.get(current_card["Chinese"], delimiter=" ")
-    canvas.itemconfig(card_pinyin, text=current_pinyin, fill="#000000")
-
-
-def flip_card():
-    global side
-    global current_pinyin
-    global show_pinyin
-    if side == 'front':
-        side = 'back'
-        canvas.itemconfig(card_image, image=card_back_img)
-        canvas.itemconfig(card_title, text="English", fill="#FFFFFF")
-        canvas.itemconfig(card_word, text=current_card["English"], fill="#FFFFFF")
-        canvas.itemconfig(card_pinyin, text="", fill="#000000")
-    else:
-        side = 'front'
-        canvas.itemconfig(card_image, image=card_front_img)
-        canvas.itemconfig(card_title, text="Chinese", fill="#000000")
-        canvas.itemconfig(card_word, text=current_card["Chinese"], fill="#000000")
-        canvas.itemconfig(card_pinyin, text=current_pinyin, fill="#000000")
-
-
-def on_click(event):
-    flip_card()
-
-
-def incorrect():
-    incorrect_words.append(current_card)
-    to_learn.remove(current_card)
-    incorrect_df = pd.DataFrame(incorrect_words)
-    incorrect_df.to_csv("data/incorrect_words.csv", index=False)
-    words_to_learn_df = pd.DataFrame(to_learn)
-    words_to_learn_df.to_csv("data/words_to_learn.csv", index=False)
-    next_card()
-
-
-def correct():
-    correct_words.append(current_card)
-    to_learn.remove(current_card)
-    correct_df = pd.DataFrame(correct_words)
-    correct_df.to_csv("data/correct_words.csv", index=False)
-    next_card()
-
-
-window = Tk()
-window.title("Flashy")
-window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
-
-canvas = Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
-# image_img = PhotoImage(file="images/images.png")
-card_back_img = PhotoImage(file="images/card_back.png")
-card_front_img = PhotoImage(file="images/card_front.png")
-card_image = canvas.create_image(400, 263, image=card_front_img)
-card_title = canvas.create_text(400, 150, fill="#000000", font=("Ariel", 40, "italic"))
-card_word = canvas.create_text(400, 263, fill="#000000", font=("Ariel", 60, "bold"))
-card_pinyin = canvas.create_text(400, 363, fill="#000000", font=("Ariel", 60, "bold"))
-# canvas.itemconfig(card_pinyin, state='hidden')
-# card_show_pinyin = Button(highlightbackground="#FFFFFF", bg="#FFFFFF", text="Show Pinyin",
-#                           command=lambda:show_widget(card_pinyin))#, height=3, width=10)
-canvas.bind("<Button-1>", on_click)
-
-# Buttons
-correct_img = PhotoImage(file="images/right.png")
-incorrect_img = PhotoImage(file="images/wrong.png")
-wrong_button = Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR, image=incorrect_img, command=incorrect)
-correct_button = Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR, image=correct_img, command=correct)
-
-# Grid Layout
-canvas.grid(column=0, row=0, columnspan=15, rowspan=10)
-wrong_button.grid(column=5, row=10)
-correct_button.grid(column=9, row=10)
-# card_show_pinyin.grid(column=7, row=7)
-
-# Set up flashcards
-next_card()
+window = tk.Tk()
+a = App()
 
 window.mainloop()
