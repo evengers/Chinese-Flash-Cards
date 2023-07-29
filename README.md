@@ -1,6 +1,6 @@
 # Chinese-Flash-Cards
  
-Flash Card app created with pandas and Tkinter
+Educational app to assist in learning Chinese (Mandarin). Flash cards to memorize 1000 of the most everyday used words. Includes Chinese->English translations and pinyin. Created using Tkinter.
 
 Features:
 - Flashcards of over 1000 of the most commonly used Chinese words
