@@ -2,6 +2,8 @@ import tkinter as tk
 from random import choice
 import pandas as pd
 import pinyin
+from google_speech import Speech
+import sox
 #import re
 
 BACKGROUND_COLOR = "#B1DDC6"
@@ -50,20 +52,24 @@ class App(object):
         self.card_word = self.canvas.create_text(400, 263, fill="#000000", font=("Ariel", 60, "bold"))
         self.card_pinyin_label = self.canvas.create_text(400, 363, fill="#000000", font=("Ariel", 60, "bold"))
         self.canvas.itemconfig(self.card_pinyin_label, state='hidden')
-        self.show_pinyin_button = tk.Button(window, highlightbackground="#FFFFFF", bg="#FFFFFF", text="Show Pinyin", command=self.show_pinyin)  # , height=3, width=10)
         self.canvas.bind("<Button-1>", self.on_click)
 
         # Buttons
         self.correct_img = tk.PhotoImage(file="images/right.png")
         self.incorrect_img = tk.PhotoImage(file="images/wrong.png")
+        self.volume_img = tk.PhotoImage(file="images/volume_icon.png")
+        self.volume_img = self.volume_img.subsample(10)
         self.wrong_button = tk.Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR, image=self.incorrect_img, command=self.incorrect)
         self.correct_button = tk.Button(highlightbackground=BACKGROUND_COLOR, bg=BACKGROUND_COLOR, image=self.correct_img, command=self.correct)
+        self.show_pinyin_button = tk.Button(window, highlightbackground="#FFFFFF", bg="#FFFFFF", text="Show Pinyin", command=self.show_pinyin)  # , height=3, width=10)
+        self.narrator_button = tk.Button(window, highlightbackground="#FFFFFF", bg="#FFFFFF", image=self.volume_img, command=self.narrate)
 
         # Grid Layout
         self.canvas.grid(column=0, row=0, columnspan=15, rowspan=10)
         self.wrong_button.grid(column=5, row=10)
         self.correct_button.grid(column=9, row=10)
         self.show_pinyin_button.grid(column=7, row=7)
+        self.narrator_button.grid(column=7, row=8)
 
         # Set up flashcards
         self.next_card()
@@ -74,6 +80,20 @@ class App(object):
         self.show_pinyin_button.lower()  # Lowers button below canvas. i.e. out of view. Much easier than destroying
         # self.show_pinyin_button.destroy()
         self.canvas.itemconfig(self.card_pinyin_label, state='normal')
+
+    def narrate(self):
+        global side
+        global current_card
+        lang = ''
+        text = ''
+        if side == 'front':
+            lang = "zh"
+            text = current_card["Chinese"]
+        elif side == 'back':
+            lang = "en"
+            text = current_card["English"]
+        speech = Speech(text, lang)
+        speech.play()
 
     def flip_card(self):
         global side
