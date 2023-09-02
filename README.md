@@ -14,6 +14,7 @@ Chinese words taken from: https://github.com/hermitdave/FrequencyWords/tree/mast
 
 TODO:
 - Hookup ChatGPT to generate Chinese sentences
+- Look into using Bard instead of using ChatGPT (Don't want to provide phone number and get spam) https://github.com/dsdanielpark/Bard-API
 - google translate -> https://pypi.org/project/googletrans/
 - hook up Google translate to do automatic translations (for each character and sentence) -> https://codelabs.developers.google.com/codelabs/cloud-translation-python3#0
 - Create another flash card stack by web scraping https://studychinese101.com/1000-chinese-sentences-in-daily-life.html
