@@ -1,0 +1,46 @@
+/* Text container styles */
+#words-container {
+    font-size: 84px; /* Adjust the font size as needed */
+    font-weight: bold; /* Optionally, make the text bold */
+    padding: 20px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow effect */
+}
+
+/* Button styles */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #000000;
+    background-color: #FFFFFF;
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.button:hover {
+    background-color: #000000;
+    color: #FFFFFF;
+    border-color: #000000;
+}
+
+/* Optional: Specific styles for each button */
+#wrong-button {
+    background-color: #FF6347; /* Light coral */
+}
+
+#correct-button {
+    background-color: #32CD32; /* Lime green */
+}
+
+#show-pinyin-button {
+    background-color: #87CEEB; /* Sky blue */
+}
+
+#narrator-button {
+    background-color: #FFD700; /* Gold */
+}
+
