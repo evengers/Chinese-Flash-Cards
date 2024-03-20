@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
        const currentWord = wordsData[0]; // Get the current word
        if (currentWord) {
            console.log('Incorrect:', currentWord);
-           updateCSVFile('remove', currentWord.id); // Update CSV file (remove word)
+           updateCSVFile('wrong', currentWord.id); // Update CSV file (remove word)
            nextWord(); // Move to the next word
        }
    });
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
        const currentWord = wordsData[0]; // Get the current word
        if (currentWord) {
            console.log('Correct:', currentWord);
-           updateCSVFile('remove', currentWord.id); // Update CSV file (remove word)
+           updateCSVFile('correct', currentWord.id); // Update CSV file (remove word)
            nextWord(); // Move to the next word
        }
    });
