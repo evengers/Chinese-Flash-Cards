@@ -17,6 +17,8 @@ fs.createReadStream('data/words_to_learn.csv')
    })
    .on('end', () => {
       console.log('Words loaded');
+      // Sort wordsData by the "Status" column after reading the CSV file
+      wordsData.sort((a, b) => parseInt(a.Status) - parseInt(b.Status));
    });
 
 // Serve index.html for the root URL
@@ -34,22 +36,28 @@ app.post('/update-csv', (req, res) => {
     // Check if req.body exists
     if (req.body) {
         const { action, wordId } = req.body;
-        if (action === 'correct' && wordId) {
+        switch (action) {
+            case 'correct':
+                handleAction(wordId, 1); // Increment value
+                break;
+            case 'incorrect':
+                handleAction(wordId, -1); // Decrement value
+                break;
+            // Add cases for future actions here
+            default:
+                res.status(400).json({ error: 'Invalid action' });
+                break;
+        }
+    } else {
+        res.status(400).json({ error: 'req.body is undefined' });
+    }
+
+    // Function to handle 'correct' or 'incorrect' action
+    function handleAction(wordId, incrementValue) {
+        if (wordId) {
             const updatedData = wordsData.map(word => {
                 if (word.id === wordId) {
-                    // Update the "Status" property of the word object
-                    word.Status = 'Correct';
-                }
-                return word;
-            });
-            updateCSVFile(updatedData);
-            wordsData = updatedData;
-            res.json({ success: true });
-        } else if (action === 'incorrect' && wordId) {
-            const updatedData = wordsData.map(word => {
-                if (word.id === wordId) {
-                    // Update the "Status" property of the word object
-                    word.Status = 'Incorrect';
+                    word.Status = parseInt(word.Status) + incrementValue; // Add or subtract incrementValue
                 }
                 return word;
             });
@@ -59,8 +67,6 @@ app.post('/update-csv', (req, res) => {
         } else {
             res.status(400).json({ error: 'Invalid request' });
         }
-    } else {
-        res.status(400).json({ error: 'req.body is undefined' });
     }
 });
 
