@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listeners for control buttons
     const wrongButton = document.getElementById('wrong-button');
     const correctButton = document.getElementById('correct-button');
+    const ignoreButton = document.getElementById('ignore-button');
 
     wrongButton.addEventListener('click', () => {
         const currentWord = wordsData[0]; // Get the current word
@@ -68,6 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentWord) {
             console.log('Correct:', currentWord);
             updateCSVFile('correct', currentWord.id); // Update CSV file (set status to 'correct')
+        }
+    });
+    
+    ignoreButton.addEventListener('click', () => {
+        const currentWord = wordsData[0]; // Get the current word
+        if (currentWord) {
+            console.log('Ignore:', currentWord);
+            updateCSVFile('ignore', currentWord.id); // Update CSV file (set status to 'correct')
         }
     });
 });
