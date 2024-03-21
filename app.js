@@ -34,11 +34,22 @@ app.post('/update-csv', (req, res) => {
     // Check if req.body exists
     if (req.body) {
         const { action, wordId } = req.body;
-           if (action === 'correct' && wordId) {
+        if (action === 'correct' && wordId) {
             const updatedData = wordsData.map(word => {
                 if (word.id === wordId) {
-                    // Add a new property "Status" to the word object
-                    return { ...word, Status: action === 'correct' ? 'Correct' : 'Wrong' };
+                    // Update the "Status" property of the word object
+                    word.Status = 'Correct';
+                }
+                return word;
+            });
+            updateCSVFile(updatedData);
+            wordsData = updatedData;
+            res.json({ success: true });
+        } else if (action === 'incorrect' && wordId) {
+            const updatedData = wordsData.map(word => {
+                if (word.id === wordId) {
+                    // Update the "Status" property of the word object
+                    word.Status = 'Incorrect';
                 }
                 return word;
             });
@@ -55,11 +66,9 @@ app.post('/update-csv', (req, res) => {
 
 // Function to update the CSV file with new data
 const updateCSVFile = (data) => {
-    const csvData = fs.readFileSync('data/words_to_learn.csv', 'utf8').trim().split('\n');
-    const header = csvData[0].trim() + ',Status'; // Add "Status" to the header
+    const header = Object.keys(data[0]).join(','); // Get CSV header
     const newDataRows = data.map(word => {
-        const rowData = Object.values(word).map(value => `"${value}"`).join(',');
-        return `${rowData},${word.Status}`; // Add status to each row
+        return Object.values(word).map(value => `"${value}"`).join(',');
     }).join('\n');
     const updatedCSV = `${header}\n${newDataRows}`;
 
