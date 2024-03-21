@@ -38,11 +38,14 @@ app.post('/update-csv', (req, res) => {
         const { action, wordId } = req.body;
         switch (action) {
             case 'correct':
-                handleAction(wordId, 1); // Increment value
+                handleAction(wordId, -1); // decrement value so moves to top of file
                 break;
             case 'incorrect':
-                handleAction(wordId, -1); // Decrement value
+                handleAction(wordId, 1); // incrementvalue
                 break;
+            case 'ignore':
+                handleAction(wordId, 99); //so moves to end of file
+               break;
             // Add cases for future actions here
             default:
                 res.status(400).json({ error: 'Invalid action' });
