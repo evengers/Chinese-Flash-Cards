@@ -22,6 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
         wordsContainer.textContent = `${currentWord.Chinese} - ${currentWord.English}`;
     };
 
+    // Function to remove the current word from the data and display the next word
+    const nextWord = () => {
+        wordsData.shift(); // Remove the first word from the data
+        displayWord(); // Display the next word after removing
+    };
+
     // Function to update CSV file on the server
     const updateCSVFile = (action, wordId) => {
         fetch('/update-csv', {
@@ -40,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             console.log('Server response:', data); // Log server response
+            nextWord(); // Move to the next word after updating CSV file
         })
         .catch(error => console.error('Error updating CSV file:', error));
     };
@@ -53,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentWord) {
             console.log('Incorrect:', currentWord);
             updateCSVFile('incorrect', currentWord.id); // Update CSV file (set status to 'incorrect')
-            nextWord(); // Move to the next word
         }
     });
 
@@ -62,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentWord) {
             console.log('Correct:', currentWord);
             updateCSVFile('correct', currentWord.id); // Update CSV file (set status to 'correct')
-            nextWord(); // Move to the next word
         }
     });
 });
