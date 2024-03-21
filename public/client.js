@@ -3,7 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
    // Fetch words data from server and store it in wordsData variable
    fetch('/words')
-       .then(response => response.json())
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Failed to fetch words data');
+           }
+           return response.json();
+       })
        .then(data => {
            wordsData = data;
            displayWord(); // Display the first word when data is loaded
@@ -33,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
        const currentWord = wordsData[0]; // Get the current word
        if (currentWord) {
            console.log('Incorrect:', currentWord);
-           updateCSVFile('wrong', currentWord.id); // Update CSV file (remove word)
+           updateCSVFile('remove', currentWord.id); // Update CSV file (remove word)
            nextWord(); // Move to the next word
        }
    });
