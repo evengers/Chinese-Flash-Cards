@@ -34,7 +34,7 @@ app.post('/update-csv', (req, res) => {
     // Check if req.body exists
     if (req.body) {
         const { action, wordId } = req.body;
-        if (action === 'remove' && wordId) {
+           if (action === 'correct' && wordId) {
             const updatedData = wordsData.map(word => {
                 if (word.id === wordId) {
                     // Add a new property "Status" to the word object
