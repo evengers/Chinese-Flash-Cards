@@ -6,6 +6,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json()); // Add this line to parse JSON bodies
 
 // Read words data from CSV file
 let wordsData = [];
@@ -15,8 +16,7 @@ fs.createReadStream('data/words_to_learn.csv')
        wordsData.push(row);
    })
    .on('end', () => {
-      // console.log('Words loaded:', wordsData);
-       console.log('Words loaded');
+      console.log('Words loaded');
    });
 
 // Serve index.html for the root URL
@@ -30,23 +30,26 @@ app.get('/words', (req, res) => {
 });
 
 // Update CSV file endpoint
-
-// Update CSV file endpoint
 app.post('/update-csv', (req, res) => {
-    const { action, wordId } = req.body;
-    if (action === 'remove' && wordId) {
-        const updatedData = wordsData.map(word => {
-            if (word.id === wordId) {
-                // Add a new property "Status" to the word object
-                return { ...word, Status: action === 'correct' ? 'Correct' : 'Wrong' };
-            }
-            return word;
-        });
-        updateCSVFile(updatedData);
-        wordsData = updatedData;
-        res.json({ success: true });
+    // Check if req.body exists
+    if (req.body) {
+        const { action, wordId } = req.body;
+        if (action === 'remove' && wordId) {
+            const updatedData = wordsData.map(word => {
+                if (word.id === wordId) {
+                    // Add a new property "Status" to the word object
+                    return { ...word, Status: action === 'correct' ? 'Correct' : 'Wrong' };
+                }
+                return word;
+            });
+            updateCSVFile(updatedData);
+            wordsData = updatedData;
+            res.json({ success: true });
+        } else {
+            res.status(400).json({ error: 'Invalid request' });
+        }
     } else {
-        res.status(400).json({ error: 'Invalid request' });
+        res.status(400).json({ error: 'req.body is undefined' });
     }
 });
 
@@ -63,8 +66,6 @@ const updateCSVFile = (data) => {
     // Write the updated CSV data back to the file
     fs.writeFileSync('data/words_to_learn.csv', updatedCSV);
 };
-
-
 
 app.listen(port, () => {
    console.log(`Flashy app listening at http://localhost:${port}`);
