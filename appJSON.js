@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 // Serve index.html for the root URL
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'indexJSON.html'));
 });
 
 // CRUD operations for JSON data
