@@ -5,8 +5,8 @@ const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
-const FILE_NAME = 'data.json';
-
+//const FILE_NAME = 'data.json';
+const FILE_NAME = path.join(__dirname, 'public','data.json');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
@@ -21,8 +21,10 @@ app.post('/crud', (req, res) => {
 
     // Read operation
     if (action === 'read') {
+        console.log("trying to read data from file to send to client");
         const data = readDataFromFile();
         if (payload === 'all') {
+            //console.log(data); //just debug
             res.json(data);
         } else {
             const item = data.find(item => item.id === parseInt(payload));
@@ -57,6 +59,7 @@ app.post('/crud', (req, res) => {
 // Utility functions to read/write data from/to file
 function readDataFromFile() {
     try {
+        console.log("looking for this file" + FILE_NAME);
         const data = fs.readFileSync(FILE_NAME, 'utf8');
         return JSON.parse(data);
     } catch (error) {
@@ -70,5 +73,5 @@ function saveDataToFile(data) {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}.`);
+    console.log(`Server started JSON VERSION on port ${PORT}.`);
 });
